@@ -20,7 +20,7 @@
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local:/usr/local/bin
 
 # Script Version
-scriptVersion="2.0.0b6-a1"
+scriptVersion="2.0.0b6-a2"
 
 # Client-side Log
 scriptLog="/private/var/log/MDMLogs/Apps/DDMOSReminder.log"
@@ -44,7 +44,7 @@ organizationScriptName="dorm"
 reverseDomainNameNotation="com.acnestudios"
 
 # Preference plist domains
-preferenceDomain="${reverseDomainNameNotation}.ddmosreminder"
+preferenceDomain="${reverseDomainNameNotation}.${organizationScriptName}"
 managedPreferencesPlist="/Library/Managed Preferences/${preferenceDomain}"
 localPreferencesPlist="/Library/Preferences/${preferenceDomain}"
 

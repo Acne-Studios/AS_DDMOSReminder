@@ -420,5 +420,5 @@ FodyWeavers.xsd
 # Local deployment helper
 .deployDDMOSReminder.zsh
 VERSION.txt
-aap.zsh
-com.acnestudios.ddmosreminder.plist
+com.acnestudios.dor.plist
+.DS_Store
