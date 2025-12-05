@@ -41,7 +41,7 @@ humanReadableScriptName="DDM OS Reminder End-user Message"
 organizationScriptName="dorm"
 
 # Organization's reverse domain (used for plist domains)
-reverseDomainNameNotation="org.churchofjesuschrist"
+reverseDomainNameNotation="com.acnestudios"
 
 # Preference plist domains
 preferenceDomain="${reverseDomainNameNotation}.${organizationScriptName}"
