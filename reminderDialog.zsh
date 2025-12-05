@@ -20,10 +20,10 @@
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local:/usr/local/bin
 
 # Script Version
-scriptVersion="2.0.0b6"
+scriptVersion="2.0.0b6-a3"
 
 # Client-side Log
-scriptLog="/var/log/org.churchofjesuschrist.log"
+scriptLog="/var/log/MDMLogs/Apps/DDMOSReminder.log"
 
 # Load is-at-least for version comparison
 autoload -Uz is-at-least
@@ -39,6 +39,14 @@ humanReadableScriptName="DDM OS Reminder End-user Message"
 
 # Organization's Script Name
 organizationScriptName="dorm"
+
+# Organization's reverse domain (used for plist domains)
+reverseDomainNameNotation="com.acnestudios"
+
+# Preference plist domains
+preferenceDomain="${reverseDomainNameNotation}.${organizationScriptName}"
+managedPreferencesPlist="/Library/Managed Preferences/${preferenceDomain}"
+localPreferencesPlist="/Library/Preferences/${preferenceDomain}"
 
 # Organization's number of days before deadline to starting displaying reminders
 daysBeforeDeadlineDisplayReminder="14"
