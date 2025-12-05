@@ -422,3 +422,5 @@ FodyWeavers.xsd
 VERSION.txt
 com.acnestudios.dor.plist
 .DS_Store
+com.acnestudios.dorm.plist
+org.churchofjesuschrist.dorm.plist
