@@ -44,7 +44,7 @@ export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local:/usr/local/bin
 scriptVersion="2.0.0b6-a3"
 
 # Client-side Log
-scriptLog="/var/log/MDMLogs/Apps/DDMOSReminder.log"
+scriptLog="/var/log/Acne_DDMOSReminder.log"
 
 # Minimum Required Version of swiftDialog
 swiftDialogMinimumRequiredVersion="2.5.6.4805"
