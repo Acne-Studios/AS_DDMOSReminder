@@ -41,10 +41,10 @@
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local:/usr/local/bin
 
 # Script Version
-scriptVersion="2.0.0b6"
+scriptVersion="2.0.0b6-a3"
 
 # Client-side Log
-scriptLog="/var/log/org.churchofjesuschrist.log"
+scriptLog="/var/log/MDMLogs/Apps/DDMOSReminder.log"
 
 # Minimum Required Version of swiftDialog
 swiftDialogMinimumRequiredVersion="2.5.6.4805"
@@ -65,7 +65,7 @@ resetConfiguration="${4:-"All"}"
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # Organization's Reverse Domain Name Notation (i.e., com.company.division)
-reverseDomainNameNotation="org.churchofjesuschrist"
+reverseDomainNameNotation="com.acnestudios"
 
 # Script Human-readabale Name
 humanReadableScriptName="DDM OS Reminder"
@@ -74,7 +74,7 @@ humanReadableScriptName="DDM OS Reminder"
 organizationScriptName="dor"
 
 # Organization's Directory (i.e., where your client-side scripts reside)
-organizationDirectory="/Library/Management/org.churchofjesuschrist"
+organizationDirectory="/Library/Management/DDMOSReminder"
 
 # LaunchDaemon Name & Path
 launchDaemonLabel="${reverseDomainNameNotation}.${organizationScriptName}"
