@@ -23,7 +23,7 @@ export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local:/usr/local/bin
 scriptVersion="2.0.0b6-a1"
 
 # Client-side Log
-scriptLog="/var/log/org.churchofjesuschrist.log"
+scriptLog="/private/var/log/MDMLogs/Apps/DDMOSReminder.log"
 
 # Load is-at-least for version comparison
 autoload -Uz is-at-least
@@ -41,7 +41,7 @@ humanReadableScriptName="DDM OS Reminder End-user Message"
 organizationScriptName="dorm"
 
 # Organization's reverse domain (used for plist domains)
-reverseDomainNameNotation="org.churchofjesuschrist"
+reverseDomainNameNotation="com.acnestudios"
 
 # Preference plist domains
 preferenceDomain="${reverseDomainNameNotation}.ddmosreminder"
