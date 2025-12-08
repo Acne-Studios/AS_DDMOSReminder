@@ -20,7 +20,7 @@
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local:/usr/local/bin
 
 # Script Version
-scriptVersion="2.0.0"
+scriptVersion="2.0.0-a1"
 
 # Client-side Log
 scriptLog="/var/log/org.churchofjesuschrist.log"
@@ -38,7 +38,7 @@ autoload -Uz is-at-least
 humanReadableScriptName="DDM OS Reminder End-user Message"
 
 # Organization's reverse domain (used for plist domains)
-reverseDomainNameNotation="org.churchofjesuschrist"
+reverseDomainNameNotation="com.acnestudios"
 
 # Organization's Script Name
 organizationScriptName="dorm"
