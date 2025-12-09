@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### Version 2.1.0b2 (08-Dec-2025)
+- Added ability to use `titleMessageUpdateOrUpgrade:l` (Pull Request #26; thanks, @maxsundellacne!)
+- Added logic to hide `button2` based on `DaysBeforeDeadlineHidingButton2` (Pull Request #27; thanks, @maxsundellacne!)
+
 ### Version 2.0.0 (06-Dec-2025)
 - Reorganized script structure for (hopefully) improved clarity
 - Defined `swiftDialogMinimumRequiredVersion` (Addresses #16; thanks for the heads-up, @deski-arnaud!)

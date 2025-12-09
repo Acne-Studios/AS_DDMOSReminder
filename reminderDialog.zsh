@@ -20,7 +20,7 @@
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local:/usr/local/bin
 
 # Script Version
-scriptVersion="2.0.0-a1"
+scriptVersion="2.1.0b2"
 
 # Client-side Log
 scriptLog="/var/log/org.churchofjesuschrist.log"
@@ -54,8 +54,14 @@ daysBeforeDeadlineDisplayReminder="14"
 # Organization's number of days before deadline to enable swiftDialog's blurscreen
 daysBeforeDeadlineBlurscreen="3"
 
+# Organization's number of days before deadline to hide the secondary button
+daysBeforeDeadlineHidingButton2="1"
+
 # Organization's Meeting Delay (in minutes) 
 meetingDelay="75"
+
+# Track whether the secondary button should be hidden (computed at runtime)
+hideSecondaryButton="NO"
 
 # Date format for deadlines (used with date -jf)
 dateFormatDeadlineHumanReadable="+%a, %d-%b-%Y, %-l:%M %p"
@@ -159,6 +165,8 @@ function replacePlaceholders() {
     value=${value//'{ddmVersionStringDaysRemaining}'/${ddmVersionStringDaysRemaining}}
     value=${value//\{titleMessageUpdateOrUpgrade\}/${titleMessageUpdateOrUpgrade}}
     value=${value//'{titleMessageUpdateOrUpgrade}'/${titleMessageUpdateOrUpgrade}}
+    value=${value//\{titleMessageUpdateOrUpgrade:l\}/${titleMessageUpdateOrUpgrade:l}}
+    value=${value//'{titleMessageUpdateOrUpgrade:l}'/${titleMessageUpdateOrUpgrade:l}}
     value=${value//\{softwareUpdateButtonText\}/${softwareUpdateButtonText}}
     value=${value//'{softwareUpdateButtonText}'/${softwareUpdateButtonText}}
     value=${value//\{button1text\}/${button1text}}
@@ -200,6 +208,11 @@ function applyHideRules() {
         helpimage=""
     fi
 
+    # Hide secondary button based on computed deadline window flag
+    if [[ "${hideSecondaryButton}" == "YES" ]]; then
+        button2text=""
+    fi
+
 }
 
 function loadPreferenceOverrides() {
@@ -208,6 +221,7 @@ function loadPreferenceOverrides() {
         scriptLog_managed=$(defaults read "${managedPreferencesPlist}" ScriptLog 2> /dev/null)
         daysBeforeDeadlineDisplayReminder_managed=$(defaults read "${managedPreferencesPlist}" DaysBeforeDeadlineDisplayReminder 2> /dev/null)
         daysBeforeDeadlineBlurscreen_managed=$(defaults read "${managedPreferencesPlist}" DaysBeforeDeadlineBlurscreen 2> /dev/null)
+        daysBeforeDeadlineHidingButton2_managed=$(defaults read "${managedPreferencesPlist}" DaysBeforeDeadlineHidingButton2 2> /dev/null)
         meetingDelay_managed=$(defaults read "${managedPreferencesPlist}" MeetingDelay 2> /dev/null)
         organizationOverlayiconURL_managed=$(defaults read "${managedPreferencesPlist}" OrganizationOverlayIconURL 2> /dev/null)
         swapOverlayAndLogo_managed=$(defaults read "${managedPreferencesPlist}" SwapOverlayAndLogo 2> /dev/null)
@@ -233,6 +247,7 @@ function loadPreferenceOverrides() {
         scriptLog_local=$(defaults read "${localPreferencesPlist}" ScriptLog 2> /dev/null)
         daysBeforeDeadlineDisplayReminder_local=$(defaults read "${localPreferencesPlist}" DaysBeforeDeadlineDisplayReminder 2> /dev/null)
         daysBeforeDeadlineBlurscreen_local=$(defaults read "${localPreferencesPlist}" DaysBeforeDeadlineBlurscreen 2> /dev/null)
+        daysBeforeDeadlineHidingButton2_local=$(defaults read "${localPreferencesPlist}" DaysBeforeDeadlineHidingButton2 2> /dev/null)
         meetingDelay_local=$(defaults read "${localPreferencesPlist}" MeetingDelay 2> /dev/null)
         organizationOverlayiconURL_local=$(defaults read "${localPreferencesPlist}" OrganizationOverlayIconURL 2> /dev/null)
         swapOverlayAndLogo_local=$(defaults read "${localPreferencesPlist}" SwapOverlayAndLogo 2> /dev/null)
@@ -257,6 +272,7 @@ function loadPreferenceOverrides() {
     setPreferenceValue "scriptLog" "${scriptLog_managed}" "${scriptLog_local}" "${scriptLog}"
     setNumericPreferenceValue "daysBeforeDeadlineDisplayReminder" "${daysBeforeDeadlineDisplayReminder_managed}" "${daysBeforeDeadlineDisplayReminder_local}" "${daysBeforeDeadlineDisplayReminder}"
     setNumericPreferenceValue "daysBeforeDeadlineBlurscreen" "${daysBeforeDeadlineBlurscreen_managed}" "${daysBeforeDeadlineBlurscreen_local}" "${daysBeforeDeadlineBlurscreen}"
+    setNumericPreferenceValue "daysBeforeDeadlineHidingButton2" "${daysBeforeDeadlineHidingButton2_managed}" "${daysBeforeDeadlineHidingButton2_local}" "${daysBeforeDeadlineHidingButton2}"
     setNumericPreferenceValue "meetingDelay" "${meetingDelay_managed}" "${meetingDelay_local}" "${meetingDelay}"
     setPreferenceValue "swapOverlayAndLogo" "${swapOverlayAndLogo_managed}" "${swapOverlayAndLogo_local}" "${swapOverlayAndLogo}"
     setPreferenceValue "dateFormatDeadlineHumanReadable" "${dateFormatDeadlineHumanReadable_managed}" "${dateFormatDeadlineHumanReadable_local}" "${dateFormatDeadlineHumanReadable}"
@@ -351,15 +367,21 @@ installedOSvsDDMenforcedOS() {
     ddmEnforcedInstallDateHumanReadable=${ddmEnforcedInstallDateHumanReadable// AM/ a.m.}
     ddmEnforcedInstallDateHumanReadable=${ddmEnforcedInstallDateHumanReadable// PM/ p.m.}
 
-    # Blurscreen logic (based on precise timestamp comparison)
+    # Blurscreen logic and secondary button hiding (based on precise timestamp comparison)
     nowEpoch=$(date +%s)
     secondsUntilDeadline=$(( deadlineEpoch - nowEpoch ))
     blurThresholdSeconds=$(( daysBeforeDeadlineBlurscreen * 86400 ))
+    hideButton2ThresholdSeconds=$(( daysBeforeDeadlineHidingButton2 * 86400 ))
     ddmVersionStringDaysRemaining=$(( (secondsUntilDeadline + 43200) / 86400 )) # Round to nearest whole day
     if (( secondsUntilDeadline <= blurThresholdSeconds )); then
         blurscreen="--blurscreen"
     else
         blurscreen="--noblurscreen"
+    fi
+    if (( secondsUntilDeadline <= hideButton2ThresholdSeconds )); then
+        hideSecondaryButton="YES"
+    else
+        hideSecondaryButton="NO"
     fi
 
     # Version Comparison Result
@@ -373,10 +395,10 @@ installedOSvsDDMenforcedOS() {
         majorInstalled="${installedmacOSVersion%%.*}"
         majorDDM="${ddmVersionString%%.*}"
         if [[ "$majorInstalled" != "$majorDDM" ]]; then
-            titleMessageUpdateOrUpgrade="upgrade"
+            titleMessageUpdateOrUpgrade="Upgrade"
             softwareUpdateButtonText="Upgrade Now"
         else
-            titleMessageUpdateOrUpgrade="update"
+            titleMessageUpdateOrUpgrade="Update"
             softwareUpdateButtonText="Restart Now"
         fi
     fi
@@ -528,7 +550,7 @@ function updateRequiredVariables() {
     # Title, Message and  Button Variables
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-    local defaultTitle="macOS ${titleMessageUpdateOrUpgrade} required"
+    local defaultTitle="macOS ${titleMessageUpdateOrUpgrade} Required"
     setPreferenceValue "title" "${title_managed}" "${title_local}" "${defaultTitle}"
     replacePlaceholders "title"
 
@@ -595,7 +617,6 @@ function displayReminderDialog() {
         --overlayicon "${overlayicon}"
         --infobox "${infobox}"
         --button1text "${button1text}"
-        --button2text "${button2text}"
         --messagefont "size=14"
         --width 800
         --height 600
@@ -603,6 +624,7 @@ function displayReminderDialog() {
         "${additionalDialogOptions[@]}"
     )
 
+    [[ -n "${button2text}" ]] && dialogArgs+=(--button2text "${button2text}")
     [[ -n "${infobuttontext}" ]] && dialogArgs+=(--infobuttontext "${infobuttontext}")
     [[ -n "${helpmessage}" ]] && dialogArgs+=(--helpmessage "${helpmessage}")
     [[ -n "${helpimage}" ]] && dialogArgs+=(--helpimage "${helpimage}")
@@ -826,7 +848,22 @@ if [[ "${1}" == "demo" ]]; then
     fi
     ddmEnforcedInstallDateHumanReadable=${ddmEnforcedInstallDateHumanReadable// AM/ a.m.}
     ddmEnforcedInstallDateHumanReadable=${ddmEnforcedInstallDateHumanReadable// PM/ p.m.}
-    ddmVersionStringDaysRemaining="${demoDeadlineOffsetDays}"
+    deadlineEpoch=$(date -jf "%Y-%m-%dT%H:%M:%S" "${ddmVersionStringDeadline}" "+%s" 2>/dev/null)
+    nowEpoch=$(date +%s)
+    secondsUntilDeadline=$(( deadlineEpoch - nowEpoch ))
+    blurThresholdSeconds=$(( daysBeforeDeadlineBlurscreen * 86400 ))
+    hideButton2ThresholdSeconds=$(( daysBeforeDeadlineHidingButton2 * 86400 ))
+    ddmVersionStringDaysRemaining=$(( (secondsUntilDeadline + 43200) / 86400 )) # Round to nearest whole day
+    if (( secondsUntilDeadline <= blurThresholdSeconds )); then
+        blurscreen="--blurscreen"
+    else
+        blurscreen="--noblurscreen"
+    fi
+    if (( secondsUntilDeadline <= hideButton2ThresholdSeconds )); then
+        hideSecondaryButton="YES"
+    else
+        hideSecondaryButton="NO"
+    fi
     ddmVersionStringDeadlineHumanReadable="${ddmEnforcedInstallDateHumanReadable}"
 
     # Title / update-or-upgrade logic
