@@ -38,7 +38,7 @@ autoload -Uz is-at-least
 humanReadableScriptName="DDM OS Reminder End-user Message"
 
 # Organization's reverse domain (used for plist domains)
-reverseDomainNameNotation="org.churchofjesuschrist"
+reverseDomainNameNotation="com.acnestudios"
 
 # Organization's Script Name
 organizationScriptName="dorm"
