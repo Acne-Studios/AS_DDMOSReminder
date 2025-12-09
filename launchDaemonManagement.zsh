@@ -38,7 +38,7 @@
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local:/usr/local/bin
 
 # Script Version
-scriptVersion="2.1.0b2a1"
+scriptVersion="2.1.0b2"
 
 # Client-side Log
 scriptLog="/private/var/log/Acne_DDMOSReminder.log"
@@ -316,15 +316,15 @@ cat <<ENDOFLAUNCHDAEMON
     <array>
         <dict>
             <key>Hour</key>
-            <integer>8</integer>
+            <integer>11</integer>
             <key>Minute</key>
-            <integer>0</integer>
+            <integer>45</integer>
         </dict>
         <dict>
             <key>Hour</key>
             <integer>16</integer>
             <key>Minute</key>
-            <integer>0</integer>
+            <integer>45</integer>
         </dict>
     </array>
     <key>StandardErrorPath</key>
